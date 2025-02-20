@@ -1,8 +1,11 @@
 import React from "react";
 
-export default function Button({ title }) {
+export default function Button({ children, title, customClass }) {
   return (
-    <button className="btn btn-outline btn-primary btn-xs sm:btn-sm md:btn-md lg:btn-lg">
+    <button
+      className={`${customClass} btn btn-outline btn-xs sm:btn-sm md:btn-md lg:btn-lg shadow`}
+    >
+      {children}
       {title}
     </button>
   );
