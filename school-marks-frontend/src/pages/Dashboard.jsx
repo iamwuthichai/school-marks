@@ -3,10 +3,12 @@ import React from "react";
 import MainLayout from "../layouts/MainLayout";
 import Button from "../components/Button";
 import DataTable from "../components/DataTable";
-import Plus from "../components/icons/Plus";
-import Minus from "../components/icons/Minus";
-import Trash from "../components/icons/Trash";
-import Pencil from "../components/icons/Pencil";
+// import Minus from "../components/icons/Minus";
+// import Trash from "../components/icons/Trash";
+// import Pencil from "../components/icons/Pencil";
+import Modal from "../components/Modal";
+import FormAddStudent from "../components/Form/FormAddStudent";
+import { BookOpenText, Pencil, Plus, Trash2 } from "lucide-react";
 
 function Dashboard() {
   const studentData = [
@@ -18,13 +20,13 @@ function Dashboard() {
       action: (
         <>
           <Button customClass="btn-circle text-primary m-2" title="">
+            <BookOpenText />
+          </Button>
+          <Button customClass="btn-circle text-primary m-2" title="">
             <Pencil />
           </Button>
           <Button customClass="btn-circle text-primary m-2" title="">
-            <Minus />
-          </Button>
-          <Button customClass="btn-circle text-primary m-2" title="">
-            <Trash />
+            <Trash2 />
           </Button>
         </>
       ),
@@ -37,13 +39,13 @@ function Dashboard() {
       action: (
         <>
           <Button customClass="btn-circle text-primary m-2" title="">
+            <BookOpenText />
+          </Button>
+          <Button customClass="btn-circle text-primary m-2" title="">
             <Pencil />
           </Button>
           <Button customClass="btn-circle text-primary m-2" title="">
-            <Minus />
-          </Button>
-          <Button customClass="btn-circle text-primary m-2" title="">
-            <Trash />
+            <Trash2 />
           </Button>
         </>
       ),
@@ -52,23 +54,19 @@ function Dashboard() {
   return (
     <MainLayout>
       <div className="flex justify-end">
-        <Button customClass="bg-info text-white m-2" title="เพิ่มนักเรียนใหม่">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="size-6"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-            />
-          </svg>
+        <Button
+          customClass="bg-info text-white m-2"
+          title="เพิ่มนักเรียนใหม่"
+          onClick={() => document.getElementById("my_modal_3").showModal()}
+        >
+          <Plus />
         </Button>
       </div>
+
+      <Modal title="เพิ่มนักเรียนใหม่">
+        <FormAddStudent></FormAddStudent>
+      </Modal>
+
       <DataTable data={studentData} />
     </MainLayout>
   );
