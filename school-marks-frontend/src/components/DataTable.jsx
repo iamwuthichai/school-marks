@@ -13,6 +13,7 @@ function DataTable({ data }) {
             <th>Name</th>
             <th>Address</th>
             <th>Marks</th>
+            <th>Status</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -40,6 +41,7 @@ function DataTable({ data }) {
                 </td>
                 <td>{data.address}</td>
                 <td>{data.marks}</td>
+                <td></td>
                 <th>{data.action}</th>
               </tr>
             ))
