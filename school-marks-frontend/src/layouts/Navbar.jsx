@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { NotebookTabs } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { LogOut, NotebookTabs } from "lucide-react";
 
 function Navbar() {
+  const navigate = useNavigate();
   const [menu, setMenu] = useState([]);
 
   const mockupMenu = [
@@ -67,7 +69,9 @@ function Navbar() {
         </ul>
       </div>
 
-      <div className="navbar-end">{/* <a className="btn">Button</a> */}</div>
+      <div className="navbar-end">
+        <LogOut onClick={() => navigate("/")} />
+      </div>
     </div>
   );
 }
