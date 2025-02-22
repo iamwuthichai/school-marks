@@ -1,15 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-function Modal({ children, title }) {
+function ModalCrud({ children, title }) {
   return (
     <>
-      {/* <button
-        className="btn"
-        onClick={() => document.getElementById("my_modal_3").showModal()}
-      >
-        open modal
-      </button> */}
-      <dialog id="my_modal_3" className="modal">
+      <dialog id="modal_crud_student" className="modal">
         <div className="modal-box">
           <form method="dialog">
             <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
@@ -25,4 +19,4 @@ function Modal({ children, title }) {
   );
 }
 
-export default Modal;
+export default ModalCrud;
