@@ -24,7 +24,7 @@ export default function Main() {
           <hr className="m-4 text-gray-200" />
           <Button
             title="เริ่มต้นใช้งาน"
-            customClass="bg-blue-500 text-white"
+            customClass="bg-primary text-white"
             onClick={() => navigate("/dashboard")}
           >
             <LogIn />

@@ -11,11 +11,13 @@ import {
   User,
 } from "lucide-react";
 import Button from "../Button";
+import MessageAlert from "../MessageAlert";
 
 function FormCrudStudent({ children, modalMode, dataSource, callback }) {
   const [mode, setMode] = useState("");
   const [readOnly, setReadOnly] = useState(false);
   const [studenInfo, setStudenInfo] = useState([]);
+  const [messageAlertData, setMessageAlertData] = useState("");
 
   useEffect(() => {
     setMode(modalMode);
@@ -48,11 +50,21 @@ function FormCrudStudent({ children, modalMode, dataSource, callback }) {
         if (callback) {
           callback();
         }
+
+        // Use Message Alert
+        setMessageAlertData({
+          messageType: "success",
+          messageText: "อัปเดตข้อมูลนักเรียนเรียบร้อย",
+        });
       } catch (error) {
-        console.log("error", error.message || "เกิดข้อผิดพลาด");
+        // Use Message Alert
+        setMessageAlertData({
+          messageType: "error",
+          messageText: error.message || "เกิดข้อผิดพลาด",
+        });
       } finally {
         // setLoading(false);
-        console.log("finally");
+        // console.log("finally");
       }
     };
 
@@ -173,6 +185,8 @@ function FormCrudStudent({ children, modalMode, dataSource, callback }) {
           ""
         )}
       </div>
+
+      <MessageAlert callback={messageAlertData} />
     </>
   );
 }

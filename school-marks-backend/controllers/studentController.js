@@ -2,7 +2,10 @@ const Student = require('../models/studentModel');
 
 exports.getAllStudents = async (req, res, next) => {
     try {
-        const students = await Student.getAll();
+        const { name, address } = req.query; // ดึงค่าจาก Query Params
+        const filters = { name, address };
+
+        const students = await Student.getAll(filters);
         res.json(students);
     } catch (error) {
         next(error);
@@ -48,7 +51,10 @@ exports.deleteStudent = async (req, res, next) => {
 
 exports.summaryStudent = async (req, res, next) => {
     try {
-        const studentSummary = await Student.summary();
+        const { name, address } = req.query; // ดึงค่าจาก Query Params
+        const filters = { name, address };
+
+        const studentSummary = await Student.summary(filters);
         res.json(studentSummary);
     } catch (error) {
         next(error);

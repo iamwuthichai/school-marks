@@ -13,6 +13,7 @@ import FormCrudStudent from "../components/form/FormCrudStudent";
 import DashboardSummary from "../components/DashboardSummary";
 import SearchData from "../components/SearchData";
 import ModalConfirm from "../components/modal/ModalConfirm";
+import MessageAlert from "../components/MessageAlert";
 
 function Dashboard() {
   const [actionMode, setActionMode] = useState("");
@@ -21,6 +22,8 @@ function Dashboard() {
   const [studentByIdData, setStudentByIdData] = useState([]);
   const [studentDelete, setStudentDelete] = useState([]);
   const [loadData, setLoadData] = useState("");
+  const [searchData, setSearchData] = useState("");
+  const [messageAlertData, setMessageAlertData] = useState("");
 
   useEffect(() => {}, [actionMode]);
 
@@ -30,14 +33,15 @@ function Dashboard() {
       // setLoading(true);
       try {
         const [students, summary] = await Promise.all([
-          useServiceAPI.get(paths.pathStudents, {}),
-          useServiceAPI.get(paths.pathDashboard, {}),
+          useServiceAPI.get(paths.pathStudents, searchData),
+          useServiceAPI.get(paths.pathDashboard, searchData),
         ]);
 
         // Update Data
-        const updateStudentData = students.map((item) => ({
+        const updateStudentData = students.map((item, key) => ({
           ...item,
           id: item.id,
+          key: key + 1,
           name: item.name,
           age: item.age,
           address: item.address,
@@ -45,7 +49,10 @@ function Dashboard() {
           status: (
             <div
               className={`font-bold ${
-                item.status == "PASS" ? "text-cyan-500" : "text-red-500"
+                item.status &&
+                (item.status == "PASS"
+                  ? "badge badge-accent badge-outline"
+                  : "badge badge-error badge-outline")
               }`}
             >
               {item.status}
@@ -119,26 +126,42 @@ function Dashboard() {
         // setLoading(true);
         try {
           const [students] = await Promise.all([
-            useServiceAPI.delete(
-              `${paths.pathStudents}/${studentDelete}`, {}),
+            useServiceAPI.delete(`${paths.pathStudents}/${studentDelete}`, {}),
           ]);
-  
+
           // Close Modal
           document.getElementById("modal_confirm").close();
           setLoadData("OK");
+
+          // Use Message Alert
+          setMessageAlertData({
+            messageType: "success",
+            messageText: "ลบข้อมูลนักเรียนเรียบร้อย",
+          });
         } catch (error) {
-          console.log("error", error.message || "เกิดข้อผิดพลาด");
+          // Use Message Alert
+          setMessageAlertData({
+            messageType: "error",
+            messageText: error.message || "เกิดข้อผิดพลาด",
+          });
         } finally {
           // setLoading(false);
-          console.log("finally");
+          // console.log("finally");
         }
       };
-  
+
       deleteStudent();
     } else {
       document.getElementById("modal_confirm").close();
     }
-    console.log(mode);
+  };
+
+  const handleSearchData = (data) => {
+    setSearchData({
+      name: data
+    })
+
+    setLoadData("OK");
   };
 
   return (
@@ -156,7 +179,7 @@ function Dashboard() {
       </div>
 
       <div className="flex justify-between items-center">
-        <SearchData></SearchData>
+        <SearchData callback={handleSearchData}></SearchData>
       </div>
 
       <ModalAddStudent title="เพิ่มนักเรียนใหม่">
@@ -188,6 +211,8 @@ function Dashboard() {
       </ModalConfirm>
 
       <DataTable data={studentData} />
+
+      <MessageAlert callback={messageAlertData} />
     </MainLayout>
   );
 }

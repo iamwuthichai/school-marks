@@ -6,13 +6,11 @@ function DataTable({ data }) {
 
   useEffect(() => {
     setDataSoruce(data);
-  }, [data])
-  
+  }, [data]);
 
   return (
     <div className="overflow-x-auto shadow">
       <table className="table" data-theme="light">
-        {/* head */}
         <thead>
           <tr>
             <th>#</th>
@@ -27,7 +25,7 @@ function DataTable({ data }) {
           {dataSoruce.length > 0 ? (
             dataSoruce.map((data) => (
               <tr key={data.id}>
-                <td>{data.id}</td>
+                <td>{data.key}</td>
                 <td>
                   <div className="flex items-center gap-3">
                     <div className="avatar">

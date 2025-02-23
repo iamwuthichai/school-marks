@@ -4,9 +4,11 @@ import { paths } from "../../services/apiPath";
 
 import { FileDigit, Heart, MapPinHouse, Save, User } from "lucide-react";
 import Button from "../Button";
+import MessageAlert from "../MessageAlert";
 
 function FormAddStudent({ children, callback }) {
   const [studentInfo, setStudentInfo] = useState([]);
+  const [messageAlertData, setMessageAlertData] = useState("");
 
   useEffect(() => {}, [studentInfo]);
 
@@ -24,11 +26,21 @@ function FormAddStudent({ children, callback }) {
         if (callback) {
           callback();
         }
+
+        // Use Message Alert
+        setMessageAlertData({
+          messageType: "success",
+          messageText: "เพิ่มนักเรียนสำเร็จ",
+        });
       } catch (error) {
-        console.log("error", error.message || "เกิดข้อผิดพลาด");
+        // Use Message Alert
+        setMessageAlertData({
+          messageType: "error",
+          messageText: error.message || "เกิดข้อผิดพลาด",
+        });
       } finally {
         // setLoading(false);
-        console.log("finally");
+        // console.log("finally");
       }
     };
 
@@ -104,6 +116,8 @@ function FormAddStudent({ children, callback }) {
           <Save />
         </Button>
       </div>
+
+      <MessageAlert callback={messageAlertData} />
     </>
   );
 }

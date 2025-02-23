@@ -1,8 +1,20 @@
 const db = require('../config/database');
 
 class Student {
-    static async getAll() {
-        const [rows] = await db.query('SELECT * FROM students');
+    static async getAll(filters = {}) {
+        let query = 'SELECT * FROM students WHERE 1=1';
+        const values = [];
+
+        if (filters.name) {
+            query += ' AND name LIKE ?';
+            values.push(`%${filters.name}%`);
+        }
+        if (filters.address) {
+            query += ' AND address LIKE ?';
+            values.push(`%${filters.address}%`);
+        }
+
+        const [rows] = await db.query(query, values);
         return rows;
     }
 
@@ -33,27 +45,52 @@ class Student {
         await db.query('DELETE FROM students WHERE id=?', [id]);
     }
 
-    static async summary() {
-        const query = `
-          SELECT 
-            COUNT(id) AS student_total,
-            SUM(CASE WHEN status = 'PASS' THEN 1 ELSE 0 END) AS pass_count,
-            SUM(CASE WHEN status = 'NO PASS' THEN 1 ELSE 0 END) AS no_pass_count
-          FROM students;
+    static async summary(filters = {}) {
+        let query = `
+            SELECT 
+                COUNT(id) AS student_total,
+                SUM(CASE WHEN status = 'PASS' THEN 1 ELSE 0 END) AS pass_count,
+                SUM(CASE WHEN status = 'NO PASS' THEN 1 ELSE 0 END) AS no_pass_count
+            FROM students
+            WHERE 1=1
         `;
 
+        const values = [];
+
+        // Apply filters dynamically
+        if (filters.name) {
+            query += ' AND name LIKE ?';
+            values.push(`%${filters.name}%`);
+        }
+        if (filters.address) {
+            query += ' AND address LIKE ?';
+            values.push(`%${filters.address}%`);
+        }
+        if (filters.status) {
+            query += ' AND status = ?';
+            values.push(filters.status);
+        }
+        if (filters.minMarks) {
+            query += ' AND marks >= ?';
+            values.push(filters.minMarks);
+        }
+        if (filters.maxMarks) {
+            query += ' AND marks <= ?';
+            values.push(filters.maxMarks);
+        }
+
         try {
-            const [results] = await db.query(query);
-            const totalStudents = results[0].student_total;
-            const passCount = results[0].pass_count;
-            const noPassCount = results[0].no_pass_count;
-            const averagePassNoPass = (totalStudents === 0) ? 0 : (passCount / totalStudents) * 100;
+            const [results] = await db.query(query, values);
+            const { student_total, pass_count, no_pass_count } = results[0];
+
+            // Calculate percentage of pass students
+            const averagePassNoPass = student_total ? (pass_count / student_total) * 100 : 0;
 
             return {
-                student_total: parseInt(totalStudents),
-                pass_count: parseInt(passCount),
-                no_pass_count: parseInt(noPassCount),
-                average_pass_nopass: parseFloat(averagePassNoPass.toFixed(2))
+                student_total: parseInt(student_total),
+                pass_count: parseInt(pass_count),
+                no_pass_count: parseInt(no_pass_count),
+                average_pass_nopass: parseFloat(averagePassNoPass.toFixed(2)),
             };
         } catch (err) {
             throw new Error('Error fetching summary: ' + err.message);
