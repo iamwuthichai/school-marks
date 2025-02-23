@@ -4,6 +4,7 @@
 - Install Project > cd school-marks-frontend > npm install > npm run dev
 - ReactJs
 - TailwindCSS (DaisyUI)
+- Ant Design
 - Icons (Lucide)
 
 ## BackEnd 
